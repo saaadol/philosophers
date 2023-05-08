@@ -5,4 +5,7 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include<sys/wait.h>
+#define DEAD 0
+#define ALIVE 1 
 #endif
