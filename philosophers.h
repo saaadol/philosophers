@@ -7,5 +7,7 @@
 #include <unistd.h>
 #include<sys/wait.h>
 #define DEAD 0
-#define ALIVE 1 
+#define ALIVE 1
+
+time_t getting_time(void);
 #endif

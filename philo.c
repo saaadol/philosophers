@@ -24,33 +24,50 @@ typedef struct infos {
 time_t	ft_atoi_time_t(char *str)
 {
 	time_t		i;
-	time_t		res;
+	time_t		resultat;
 
 	i = 0;
-	res = 0;
+	resultat = 0;
 	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
 		i++;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		res = res * 10 + str[i] - '0';
-		if (res < 0)
+		resultat = resultat * 10 + str[i] - '0';
+		if (resultat < 0)
 			return (0);
 		i++;
 	}
-	if (res == 0)
-		return (0);
-	return (res);
+	return (resultat);
 }
+int	ft_atoi(char *str)
+{
+	int		i;
+	int		resultat;
+
+	i = 0;
+	resultat = 0;
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		resultat = resultat * 10 + str[i] - '0';
+		if (resultat < 0)
+			return (0);
+		i++;
+	}
+	return (resultat);
+}
+
 void assigning_values(int ac, char **argv, t_philosopher *philosopher)
 {
-    philosopher->number_of_philosophers = atoi(argv[1]); 
+    philosopher->number_of_philosophers = ft_atoi(argv[1]); 
     philosopher->time_to_die = ft_atoi_time_t(argv[2]);
     philosopher->time_to_eat = ft_atoi_time_t(argv[3]);
     philosopher->time_to_sleep = ft_atoi_time_t(argv[4]);
     philosopher->num_must_eat = -1;
 	philosopher->status = 1;
     if (ac == 6)
-        philosopher->num_must_eat = atoi(argv[5]);
+        philosopher->num_must_eat = ft_atoi(argv[5]);
 }
 
 time_t getting_time(void)
@@ -63,8 +80,8 @@ time_t getting_time(void)
 }
 void initializing_mutexes(t_philosopher *philosopher)
 {
-    philosopher->forks = malloc(sizeof(pthread_mutex_t) * philosopher->number_of_philosophers);
-    philosopher->philos = malloc(sizeof(t_info) * philosopher->number_of_philosophers);
+    philosopher->forks = calloc(sizeof(pthread_mutex_t), philosopher->number_of_philosophers);
+    philosopher->philos = calloc(sizeof(t_info), philosopher->number_of_philosophers);
     int i = 0;
     while (i < philosopher->number_of_philosophers)
     {
@@ -78,19 +95,19 @@ void initializing_mutexes(t_philosopher *philosopher)
         //philosopher->philos[i].current_time = getting_time();
         philosopher->philos[i].meals_eaten = 0;
         philosopher->philos[i].pt = philosopher;
+		philosopher->philos[i].last_meal = getting_time();
         i++;
-    }  
+    }
     pthread_mutex_init(&philosopher->print, NULL);
     pthread_mutex_init(&philosopher->change, NULL);
 }
 void *executing_forks(void *philosopher)
 {
     t_info *formated_philo = (t_info *) philosopher;
-	
     while(1)
     {
-        pthread_mutex_lock(&formated_philo->pt->forks[formated_philo->Philo_index - 1]);
-        pthread_mutex_lock(&formated_philo->pt->forks[(formated_philo->Philo_index % formated_philo->pt->number_of_philosophers)]);
+		pthread_mutex_lock(&formated_philo->pt->forks[formated_philo->Philo_index - 1]);
+		pthread_mutex_lock(&formated_philo->pt->forks[formated_philo->Philo_index % formated_philo->pt->number_of_philosophers]);
         pthread_mutex_lock(&formated_philo->pt->print);
         printf("%ld philo %d has taken fork\n", getting_time() - formated_philo->last_meal,formated_philo->Philo_index);
         printf("%ld philo %d has taken fork\n", getting_time() - formated_philo->last_meal,formated_philo->Philo_index);
@@ -99,16 +116,16 @@ void *executing_forks(void *philosopher)
 		formated_philo->last_meal = getting_time();
 		pthread_mutex_unlock(&formated_philo->pt->change);
 		pthread_mutex_unlock(&formated_philo->pt->print);
-        usleep(formated_philo->pt->time_to_eat * 1000);
+        usleep(formated_philo->pt->time_to_eat * 994);
         pthread_mutex_unlock(&formated_philo->pt->forks[formated_philo->Philo_index - 1]);
-        pthread_mutex_unlock(&formated_philo->pt->forks[(formated_philo->Philo_index % formated_philo->pt->number_of_philosophers)]);
+		pthread_mutex_unlock(&formated_philo->pt->forks[formated_philo->Philo_index % formated_philo->pt->number_of_philosophers]);
         pthread_mutex_lock(&formated_philo->pt->change);
         formated_philo->meals_eaten++;
         if (formated_philo->pt->num_must_eat != -1)
         {
             if (formated_philo->meals_eaten > formated_philo->pt->num_must_eat)
             {
-                formated_philo->pt->status = ALIVE;
+                formated_philo->pt->status = 0;
                 pthread_mutex_unlock(&formated_philo->pt->change);
                 return(NULL);
             }
@@ -135,10 +152,11 @@ void checking_death_and_meals(t_philosopher *philosopher)
 		//printf("time : %ld \n", getting_time() - philosopher->philos[i].last_meal);
         if ((getting_time() - philosopher->philos[i].last_meal) > philosopher->time_to_die)
         {
+			pthread_mutex_lock(&philosopher->print);
             printf("%ld philo %d is dead\n",getting_time() - philosopher->philos[i].last_meal, philosopher->philos[i].Philo_index);
 			philosopher->status = 0;
             //pthread_mutex_unlock(&philosopher->change);
-            return;
+            return ;
         }
         pthread_mutex_unlock(&philosopher->change);
         usleep(1000); 
@@ -149,8 +167,8 @@ void initializing_threads(t_philosopher *philosopher)
     int i = 0;
     while (i < philosopher->number_of_philosophers)
     {
-		philosopher->philos[i].last_meal = getting_time();
-		philosopher->philos[i].current_time = getting_time();
+		
+		//philosopher->philos[i].current_time = getting_time();
         pthread_create(&philosopher->philos[i].tid, NULL, &executing_forks, &philosopher->philos[i]);	
 		//pthread_detach(philosopher->philos[i].tid);
         i++;
@@ -180,15 +198,15 @@ void destroying_mutexes(t_philosopher *philosopher)
 
 int main(int argc, char **argv) 
 {
-    t_philosopher philosopher;
+    t_philosopher *philosopher = malloc(sizeof(t_philosopher ));
     if (argc < 5)
         return 0;
-    assigning_values(argc, argv, &philosopher);
-    initializing_mutexes(&philosopher);
-    initializing_threads(&philosopher);
-    checking_death_and_meals(&philosopher);
-	ft_thread_join(&philosopher);
-	destroying_mutexes(&philosopher);
+    assigning_values(argc, argv, philosopher);
+    initializing_mutexes(philosopher);
+    initializing_threads(philosopher);
+    checking_death_and_meals(philosopher);
+	ft_thread_join(philosopher);
+	destroying_mutexes(philosopher);
     //usleep(300);
     return 0;
 }
