@@ -6,7 +6,7 @@
 /*   By: souledla <souledla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 21:22:33 by souledla          #+#    #+#             */
-/*   Updated: 2023/05/18 22:20:10 by souledla         ###   ########.fr       */
+/*   Updated: 2023/05/26 16:58:51 by souledla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	initializing_values(t_philosopher *philosopher)
 			* philosopher->number_of_philosophers);
 	if (!philosopher->philos)
 		exit(1);
-	if (sem_unlink("/bonnie") == -1 || sem_unlink("/clyde") == -1)
-		exit(1);
+	sem_unlink("/bonnie");
+	sem_unlink("/clyde");
 	while (i < philosopher->number_of_philosophers)
 	{
 		philosopher->philos[i].philo_index = i + 1 ;

@@ -6,7 +6,7 @@
 /*   By: souledla <souledla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 20:49:45 by souledla          #+#    #+#             */
-/*   Updated: 2023/05/18 20:55:32 by souledla         ###   ########.fr       */
+/*   Updated: 2023/05/26 09:56:23 by souledla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ void	assigning_values(int ac, char **argv, t_philosopher *philosopher)
 	philosopher->time_to_eat = ft_atoi_time_t(argv[3]);
 	philosopher->time_to_sleep = ft_atoi_time_t(argv[4]);
 	philosopher->num_must_eat = -1;
-	philosopher->status = 1;
+	//philosopher->status = 1;
 	if (ac == 6)
 		philosopher->num_must_eat = ft_atoi(argv[5]);
 }
 
 void	initializing_values(t_philosopher *philosopher)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (i < philosopher->number_of_philosophers)
@@ -41,7 +41,7 @@ void	initializing_values(t_philosopher *philosopher)
 
 int	initializing_mutexes(t_philosopher *philosopher)
 {
-	int	i;
+	size_t	i;
 
 	philosopher->forks = malloc(sizeof(pthread_mutex_t)
 			* philosopher->number_of_philosophers);

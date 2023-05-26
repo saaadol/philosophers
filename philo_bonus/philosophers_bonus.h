@@ -6,7 +6,7 @@
 /*   By: souledla <souledla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 22:12:21 by souledla          #+#    #+#             */
-/*   Updated: 2023/05/18 23:10:12 by souledla         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:37:19 by souledla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct info
 }	t_info;
 
 
-void	*executing_routine(void *philosopher);
+void 	*checking_death(void *philosopher);
 void	executing_task(t_philosopher *philosopher);
 void	exiting_child_processes(t_philosopher *philosopher, int flag);
 int		checking_values(int ac, char **av);
@@ -54,8 +54,11 @@ void	eating_routine_bonus(t_info *formated_philo);
 void	sleeping_routine_bonus(t_info *formated_philo);
 void	initializing_threads(t_info *philosopher);
 void	thinking_routine_bonus(t_info *formated_philo);
+void	assigning_values(int ac, char **av, t_philosopher *philosopher);
+void	initializing_values(t_philosopher *philosopher);
 time_t	ft_atoi_time_t(char *str);
 int		ft_atoi(char *str);
 time_t	getting_time(void);
-void	sub_task(void *philosopher);
+void	*executing_routine(void *philosopher);
+void	my_usleep(time_t mil_sec);
 #endif

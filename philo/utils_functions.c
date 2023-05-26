@@ -6,7 +6,7 @@
 /*   By: souledla <souledla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 20:48:26 by souledla          #+#    #+#             */
-/*   Updated: 2023/05/18 20:49:19 by souledla         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:37:01 by souledla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,17 @@ size_t	ft_atoi(char *str)
 		i++;
 	}
 	return (resultat);
+}
+void	my_usleep(time_t mil_sec)
+{
+	time_t	current;
+	// time_t	b_part;
+
+	// b_part = mil_sec * 9 / 10;
+	current = getting_time();
+	// usleep(b_part * 1000);
+	while (getting_time() - current < mil_sec)
+		usleep(100);
 }
 
 time_t	getting_time(void)

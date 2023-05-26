@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine _functions.c                               :+:      :+:    :+:   */
+/*   routine_functions.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: souledla <souledla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 21:19:16 by souledla          #+#    #+#             */
-/*   Updated: 2023/05/18 22:20:10 by souledla         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:37:44 by souledla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,23 @@ void	eating_routine_bonus(t_info *formated_philo)
 {
 	sem_wait(formated_philo->pt->bonnie);
 	sem_wait(formated_philo->pt->clyde);
-	printf("%ld ms philo %d has taken fork\n", getting_time()
+	printf("%ld\t%d\thas taken a fork\n", getting_time()
 		- formated_philo->pt->time_start, formated_philo->philo_index);
 	sem_post(formated_philo->pt->clyde);
 	sem_wait(formated_philo->pt->bonnie);
 	sem_wait(formated_philo->pt->clyde);
-	printf("%ld ms philo %d has taken fork\n", getting_time()
+	printf("%ld\t%d\thas taken a fork\n", getting_time()
 		- formated_philo->pt->time_start, formated_philo->philo_index);
 	sem_post(formated_philo->pt->clyde);
 	sem_wait(formated_philo->pt->clyde);
-	printf("%ld ms philo %d is eating\n", getting_time()
+	printf("%ld\t%d\tis eating\n", getting_time()
 		- formated_philo->pt->time_start, formated_philo->philo_index);
 	sem_post(formated_philo->pt->clyde);
 	sem_wait(formated_philo->pt->clyde);
 	formated_philo->current_time = getting_time();
-	sem_post(formated_philo->pt->clyde);
 	formated_philo->meals_eaten++;
-	usleep(formated_philo->pt->time_to_eat * 994);
+	sem_post(formated_philo->pt->clyde);
+	my_usleep(formated_philo->pt->time_to_eat);
 	sem_post(formated_philo->pt->bonnie);
 	sem_post(formated_philo->pt->bonnie);
 }
@@ -40,16 +40,16 @@ void	eating_routine_bonus(t_info *formated_philo)
 void	sleeping_routine_bonus(t_info *formated_philo)
 {
 	sem_wait(formated_philo->pt->clyde);
-	printf("%ld ms philo %d is sleeping\n", getting_time()
+	printf("%ld\t%d\tis sleeping\n", getting_time()
 		- formated_philo->pt->time_start, formated_philo->philo_index);
 	sem_post(formated_philo->pt->clyde);
-	usleep(formated_philo->pt->time_to_sleep * 994);
+	my_usleep(formated_philo->pt->time_to_sleep);
 }
 
 void	thinking_routine_bonus(t_info *formated_philo)
 {
 	sem_wait(formated_philo->pt->clyde);
-	printf("%ld ms philo %d is thinking\n", getting_time()
+	printf("%ld\t%d\tis thinking\n", getting_time()
 		- formated_philo->pt->time_start, formated_philo->philo_index);
 	sem_post(formated_philo->pt->clyde);
 }

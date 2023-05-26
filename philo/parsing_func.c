@@ -1,35 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   freeying_destroying_mutexes.c                      :+:      :+:    :+:   */
+/*   parsing_func.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: souledla <souledla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/18 20:46:50 by souledla          #+#    #+#             */
-/*   Updated: 2023/05/18 20:47:37 by souledla         ###   ########.fr       */
+/*   Created: 2023/05/18 20:46:00 by souledla          #+#    #+#             */
+/*   Updated: 2023/05/18 23:36:11 by souledla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	destroying_mutexes(t_philosopher *philosopher)
+int	checking_values(int ac, char **av)
 {
-	int	i;
+	int	x;
+	int	y;
 
-	i = 0;
-	while (i < philosopher->number_of_philosophers)
+	(void) ac;
+	x = 1;
+	while (av[x])
 	{
-		pthread_mutex_destroy(&philosopher->forks[i]);
-		i++;
+		y = 0;
+		while (av[x][y])
+		{
+			if (av[x][y] < '0' || av[x][y] > '9')
+			{
+				write(2, "ERROR\n", 6);
+				return (0);
+			}
+			y++;
+		}
+		x++;
 	}
-	pthread_mutex_destroy(&philosopher->change);
-	pthread_mutex_destroy(&philosopher->print);
-}
-
-void	freeing_memory(t_philosopher *philosopher)
-{
-	if (philosopher->forks)
-		free(philosopher->forks);
-	if (philosopher->philos)
-		free(philosopher->philos);
+	return (1);
 }

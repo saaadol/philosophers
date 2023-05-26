@@ -25,7 +25,7 @@ typedef struct philosopher {
 	time_t			time_to_sleep;
 	time_t			time_print;
 	size_t			number_of_philosophers;
-	size_t			num_must_eat;
+	int				num_must_eat;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
 	pthread_mutex_t	change;
@@ -57,4 +57,5 @@ void	thinking_routine(t_info *formated_philo);
 time_t	ft_atoi_time_t(char *str);
 size_t	ft_atoi(char *str);
 time_t	getting_time(void);
+void	my_usleep(time_t mil_sec);
 #endif

@@ -6,7 +6,7 @@
 /*   By: souledla <souledla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 21:25:26 by souledla          #+#    #+#             */
-/*   Updated: 2023/05/18 21:25:56 by souledla         ###   ########.fr       */
+/*   Updated: 2023/05/18 23:44:48 by souledla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	checking_values(int ac, char **av)
 	int	x;
 	int	y;
 
+	(void) ac;
 	x = 1;
 	while (av[x])
 	{
